@@ -9,9 +9,9 @@ const amplitudeConfig = {
   serverZone: 'US', // US, EU
   serverUrl: undefined, // URL personalizada del servidor (opcional)
   fetchRemoteConfig: false, // Evitar timeout de configuración remota
-  // Configuración para Session Replay
+  // Configuración para Session Replay - OPTIMIZADA PARA 100% CAPTURA
   sessionReplay: {
-    sampleRate: 0.1, // Reducido a 10% de las sesiones para mejor rendimiento
+    sampleRate: 1.0, // 100% de las sesiones grabadas para análisis completo
   },
   // Configuración de timeout
   requestTimeout: 10000, // 10 segundos de timeout
@@ -99,17 +99,35 @@ export const initAmplitude = () => {
         }
       });
       
-      // 2. Crear instancia del plugin de Session Replay con configuración reducida
+      // 2. Crear instancia del plugin de Session Replay con configuración optimizada
       const sessionReplayPlugin = sessionReplay.plugin({
         sampleRate: amplitudeConfig.sessionReplay.sampleRate,
-        // Configuración adicional para reducir carga
-        blockClass: 'amplitude-block',
-        ignoreClass: 'amplitude-ignore',
-        maskAllInputs: true,
+        // Configuración de privacidad balanceada
+        blockClass: 'amplitude-block', // Clase CSS para bloquear elementos específicos
+        ignoreClass: 'amplitude-ignore', // Clase CSS para ignorar elementos
+        maskAllInputs: false, // Permitir ver interacciones (excepto datos sensibles)
         maskInputOptions: {
-          password: true,
-          email: true,
-          phone: true
+          password: true,  // Siempre ocultar passwords
+          email: true,     // Ocultar emails
+          phone: true,     // Ocultar teléfonos
+          text: false,     // Permitir ver texto general para entender consultas
+          textarea: false, // Permitir ver contenido de chat/consultas
+        },
+        // Capturar más interacciones del usuario
+        recordCanvas: false, // No grabar canvas (puede ser pesado)
+        recordCrossOriginIframes: false, // No grabar iframes externos
+        // Configuración de red y performance
+        networkDetailAllowUrls: [], // No capturar detalles de red por privacidad
+        slimDOMOptions: {
+          script: true,  // Remover scripts del replay
+          comment: true, // Remover comentarios
+          headFavicon: true,
+          headWhitespace: true,
+          headMetaSocial: true,
+          headMetaRobots: true,
+          headMetaHttpEquiv: true,
+          headMetaAuthorship: true,
+          headMetaVerification: true,
         }
       });
       

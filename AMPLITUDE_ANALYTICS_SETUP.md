@@ -9,6 +9,7 @@ Amplitude Analytics ha sido configurado exitosamente en Pawnalytics con la sigui
 - **API Key**: `6c03f5877ee8a21940cad6f0a93ccf7a`
 - **Proyecto**: Pawnalytics Vercel Chat
 - **SDK**: `@amplitude/analytics-browser`
+- **Session Replay**: ✅ Activado al 100% (todas las sesiones grabadas)
 
 ### 📁 Archivos Configurados
 
@@ -216,13 +217,40 @@ trackEvent('video_recording_started', {
    - Problemas de autenticación
    - Fallos en grabación de audio/video
 
+### 🎬 Session Replay - Grabación de Sesiones
+
+Session Replay está configurado para grabar el 100% de las sesiones de usuario:
+
+#### Configuración Actual
+- **Sample Rate**: 100% (todas las sesiones)
+- **Privacidad**: Datos sensibles enmascarados (passwords, emails, teléfonos)
+- **Captura**: Texto de consultas y chat visible para análisis
+- **Performance**: Optimizado con slimDOM
+
+#### Cómo Ver las Grabaciones
+1. Accede a [Amplitude Dashboard](https://analytics.amplitude.com/)
+2. Ve a la sección "Session Replay"
+3. Filtra por usuario, evento o fecha
+4. Reproduce las sesiones para ver exactamente qué hacen los usuarios
+
+#### Qué Puedes Ver
+- ✅ Flujo completo de navegación
+- ✅ Consultas que escriben los usuarios
+- ✅ Clics e interacciones
+- ✅ Errores que encuentran
+- ✅ Tiempo en cada sección
+- ❌ Passwords (enmascarados)
+- ❌ Emails (enmascarados)
+- ❌ Teléfonos (enmascarados)
+
 ### 🎯 Próximos Pasos
 
 1. **Monitorear eventos** en el dashboard de Amplitude
-2. **Crear cohortes** de usuarios activos
-3. **Analizar funnel** de conversión
-4. **Optimizar** basado en datos de uso
-5. **Agregar eventos** para nuevas funcionalidades
+2. **Ver Session Replays** para entender comportamiento de usuarios
+3. **Crear cohortes** de usuarios activos
+4. **Analizar funnel** de conversión
+5. **Optimizar** basado en datos de uso y grabaciones
+6. **Agregar eventos** para nuevas funcionalidades
 
 ### 📞 Soporte
 
