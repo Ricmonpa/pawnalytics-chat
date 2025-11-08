@@ -55,9 +55,45 @@ export const initAmplitude = () => {
         return;
       }
 
-      console.log('🚀 Inicializando Amplitude...');
+      console.log('🚀 Inicializando Amplitude con Session Replay...');
 
-      // 1. Inicializar el SDK principal de Amplitude con configuración mejorada
+      // 1. Crear instancia del plugin de Session Replay ANTES de init()
+      const sessionReplayPlugin = sessionReplay.plugin({
+        sampleRate: amplitudeConfig.sessionReplay.sampleRate,
+        // Configuración de privacidad balanceada
+        blockClass: 'amplitude-block', // Clase CSS para bloquear elementos específicos
+        ignoreClass: 'amplitude-ignore', // Clase CSS para ignorar elementos
+        maskAllInputs: false, // Permitir ver interacciones (excepto datos sensibles)
+        maskInputOptions: {
+          password: true,  // Siempre ocultar passwords
+          email: true,     // Ocultar emails
+          phone: true,     // Ocultar teléfonos
+          text: false,     // Permitir ver texto general para entender consultas
+          textarea: false, // Permitir ver contenido de chat/consultas
+        },
+        // Capturar más interacciones del usuario
+        recordCanvas: false, // No grabar canvas (puede ser pesado)
+        recordCrossOriginIframes: false, // No grabar iframes externos
+        // Configuración de red y performance
+        networkDetailAllowUrls: [], // No capturar detalles de red por privacidad
+        slimDOMOptions: {
+          script: true,  // Remover scripts del replay
+          comment: true, // Remover comentarios
+          headFavicon: true,
+          headWhitespace: true,
+          headMetaSocial: true,
+          headMetaRobots: true,
+          headMetaHttpEquiv: true,
+          headMetaAuthorship: true,
+          headMetaVerification: true,
+        }
+      });
+      
+      // 2. Añadir el plugin ANTES de inicializar (orden crítico)
+      add(sessionReplayPlugin);
+      console.log('✅ Plugin Session Replay agregado');
+
+      // 3. Inicializar el SDK principal de Amplitude con configuración mejorada
       init(amplitudeConfig.apiKey, undefined, {
         logLevel: amplitudeConfig.logLevel,
         serverZone: amplitudeConfig.serverZone,
@@ -99,43 +135,8 @@ export const initAmplitude = () => {
         }
       });
       
-      // 2. Crear instancia del plugin de Session Replay con configuración optimizada
-      const sessionReplayPlugin = sessionReplay.plugin({
-        sampleRate: amplitudeConfig.sessionReplay.sampleRate,
-        // Configuración de privacidad balanceada
-        blockClass: 'amplitude-block', // Clase CSS para bloquear elementos específicos
-        ignoreClass: 'amplitude-ignore', // Clase CSS para ignorar elementos
-        maskAllInputs: false, // Permitir ver interacciones (excepto datos sensibles)
-        maskInputOptions: {
-          password: true,  // Siempre ocultar passwords
-          email: true,     // Ocultar emails
-          phone: true,     // Ocultar teléfonos
-          text: false,     // Permitir ver texto general para entender consultas
-          textarea: false, // Permitir ver contenido de chat/consultas
-        },
-        // Capturar más interacciones del usuario
-        recordCanvas: false, // No grabar canvas (puede ser pesado)
-        recordCrossOriginIframes: false, // No grabar iframes externos
-        // Configuración de red y performance
-        networkDetailAllowUrls: [], // No capturar detalles de red por privacidad
-        slimDOMOptions: {
-          script: true,  // Remover scripts del replay
-          comment: true, // Remover comentarios
-          headFavicon: true,
-          headWhitespace: true,
-          headMetaSocial: true,
-          headMetaRobots: true,
-          headMetaHttpEquiv: true,
-          headMetaAuthorship: true,
-          headMetaVerification: true,
-        }
-      });
-      
-      // 3. Añadir el plugin a la instancia de Amplitude
-      add(sessionReplayPlugin);
-      
       isAmplitudeInitialized = true;
-      console.log('✅ Amplitude inicializado correctamente con Session Replay');
+      console.log('✅ Amplitude inicializado correctamente con Session Replay al 100%');
       resolve();
     } catch (error) {
       console.error('❌ Error al inicializar Amplitude:', error);
